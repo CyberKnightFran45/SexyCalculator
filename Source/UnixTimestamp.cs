@@ -16,7 +16,12 @@ private static readonly DateTime epochTime = DateTime.Parse("1970/1/1");
 
 <returns> The TimeStamp Calculated. </returns> */
 
-public static double ConvertTo(DateTime dateTime) => Math.Truncate(dateTime.Subtract(epochTime).TotalSeconds);
+public static double ConvertTo(DateTime dateTime) 
+{
+var diff = dateTime.Subtract(epochTime);
+
+return Math.Truncate(diff.TotalSeconds);
+}
 
 /** <summary> Calculates a DateTime from a given TimeStamp Value. </summary>
 
