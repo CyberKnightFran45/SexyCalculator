@@ -1,24 +1,22 @@
 namespace SexyCalculator
 {
-/// <summary> Initializes ciphering Functions for Integers. </summary>
+/** <summary> Initializes ciphering Functions for Integers. </summary>
+
+<remarks> This ofuscation is used in some Values from <c>PvZ 2 China</c> </remarks> **/
 
 public static class IntGuard
 {
-/// <summary> The Key used for Offuscating Values. </summary>
+/// <summary> Bits rotation: left </summary>
 
-private const int KEY = 13;
+private const int SHIFT_LEFT = 13;
 
-/// <summary> A Factor used for Locking bits. </summary>
+/// <summary> Bits rotation: right </summary>
 
-private const int FACTOR = 0x1F;
+private const int SHIFT_RIGHT = 19;
 
-/// <summary> The base an Integer must have. </summary>
+// Rotate bits
 
-private const int BASE = 32;
-
-/// <summary> A Mask that avoids bit overflows. </summary>
-
-private const int MASK = 0xFF;
+private static uint RotateBits(uint v, int left, int right) => (v >> right) | (v << left);
 
 /** <summary> Encrypts an Integer value by Performing some bitwise Operations on it. </summary>
 
@@ -28,12 +26,9 @@ private const int MASK = 0xFF;
 
 public static int Encrypt(uint v)
 {
-uint x = v ^ KEY;
+uint x = v ^ SHIFT_LEFT;
 
-int shiftL = KEY & FACTOR;
-int shiftR = (BASE - shiftL) & MASK;
-	
-return (int)((x << shiftL) | (x >> shiftR));
+return (int)RotateBits(x, SHIFT_LEFT, SHIFT_RIGHT);
 }
 
 /** <summary> Decrypts an Integer value by Performing some bitwise Operations on it. </summary>
@@ -44,12 +39,9 @@ return (int)((x << shiftL) | (x >> shiftR));
 
 public static int Decrypt(uint v)
 {
-int shiftR = KEY & FACTOR;
-int shiftL = (BASE - shiftR) & MASK;
+var x = RotateBits(v, SHIFT_RIGHT, SHIFT_LEFT);
 
-uint x = (v >> shiftR) | (v << shiftL);
-
-return (int)(x ^ KEY);
+return (int)(x ^ SHIFT_LEFT);
 }
 
 }
